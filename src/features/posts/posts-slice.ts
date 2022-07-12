@@ -2,8 +2,6 @@ import { createSlice} from "@reduxjs/toolkit";
 import { PostsEntity } from "types";
 import {createPost, fetchPosts} from "../../actions/postsActions";
 
-
-
 const initialState: PostsEntity = [];
 
 export const postsSlice = createSlice({

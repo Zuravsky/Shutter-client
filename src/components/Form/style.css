@@ -1,0 +1,22 @@
+.form {
+    margin-top: 50px;
+    margin-bottom: 15px;
+    display: flex;
+    background-color: white;
+    width: 50%;
+    border-radius: 25px;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+input {
+    height: 30px;
+    width: 200px;
+}
+
+h1 {
+    align-self: center;
+}
+
