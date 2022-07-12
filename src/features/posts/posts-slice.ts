@@ -12,9 +12,13 @@ export const postsSlice = createSlice({
         builder
             .addCase(fetchPosts.fulfilled, (state, action) => {
                 state = action.payload
+
+                return state
             })
             .addCase(createPost.fulfilled, (state, action) => {
-                state = [...initialState, action.payload]
+                state = [...state, action.payload]
+
+                return state
             })
     }
 })
