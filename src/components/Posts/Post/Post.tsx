@@ -1,12 +1,16 @@
 import React from "react";
+import {deletePost} from "../../../actions/postsActions";
+import {useAppDispatch} from "../../../store";
+import {useNavigate} from 'react-router-dom'
+import {setCurrentId} from "../../../features/currentId/currentId-slice";
 
-export const Post = ({post, setCurrentId}: any) => {
-    const handleLike = () => {
+export const Post = ({post}: any) => {
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
-    }
-
-    const handleDelete = () => {
-
+    const handleEdit = () => {
+        dispatch(setCurrentId(post._id));
+        navigate('/form');
     }
 
     return (
@@ -15,9 +19,9 @@ export const Post = ({post, setCurrentId}: any) => {
             <div>{post.message}</div>
             <div>{post.tags}</div>
             <img src={post.selectedFile} width={500}/>
-            <button onClick={setCurrentId(post._id)}>Edit</button>
-            <button onClick={handleLike}>like</button>
-            <button onClick={handleDelete}>Delete</button>
+            <button onClick={handleEdit}>Edit</button>
+            <button>like</button>
+            <button onClick={() => dispatch(deletePost(post._id))}>Delete</button>
         </div>
     )
 }

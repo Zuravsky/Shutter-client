@@ -1,17 +1,32 @@
-import React, {SyntheticEvent, useState} from "react";
+import React, {SyntheticEvent, useEffect, useState} from "react";
 
 import './style.css'
-import {createPost} from "../../actions/postsActions";
-import {store} from "../../store";
+import {createPost, updatePost} from "../../actions/postsActions";
+import {RootState, useAppDispatch} from "../../store";
+import {useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
+import {CreatePostEntity} from "types";
 
 
 export const Form = () => {
-    const [postData, setPostData] = useState({
+    const [postData, setPostData] = useState<CreatePostEntity>({
         title: '',
         message: '',
         tags: '',
         selectedFile: '',
     });
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const currentId = useSelector((state: RootState) => state.currentId)
+    const post = useSelector((state: RootState) => currentId ? state.posts.find(post => post._id === currentId) : null);
+
+    useEffect(() => {
+        if(post) {
+            setPostData(post)
+        }
+    }, [post])
+
+    console.log(currentId)
 
     const toBase64 = (file: File) => new Promise(resolve => {
             let reader = new FileReader();
@@ -25,12 +40,17 @@ export const Form = () => {
         setPostData({...postData, selectedFile})
     }
 
-
     const handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        store.dispatch(createPost(postData));
+        if(currentId === null) {
+            dispatch(createPost(postData));
+        } else {
+            dispatch(updatePost({currentId, postData}))
+        }
+
         clear();
+        navigate('/')
     }
 
     const clear = () => {
