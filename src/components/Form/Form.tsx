@@ -5,14 +5,17 @@ import {createPost, updatePost} from "../../actions/postsActions";
 import {RootState, useAppDispatch} from "../../store";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
-import {CreatePostEntity} from "types";
+import {setCurrentId} from "../../features/currentId/currentId-slice";
+import {AiOutlineUpload} from "react-icons/ai";
+
 
 
 export const Form = () => {
-    const [postData, setPostData] = useState<CreatePostEntity>({
+    const [sizeExceeded, setSizeExceeded] = useState(false);
+    const [postData, setPostData] = useState({
         title: '',
         message: '',
-        tags: '',
+        tags: [''],
         selectedFile: '',
     });
     const dispatch = useAppDispatch()
@@ -26,17 +29,20 @@ export const Form = () => {
         }
     }, [post])
 
-    console.log(currentId)
-
-    const toBase64 = (file: File) => new Promise(resolve => {
+    const fileToBase64 = (file: Blob) => new Promise(resolve => {
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => resolve(reader.result);
         });
 
-    const handleImagetoBase64 = async (e: any) => {
-        const file = e.target.files[0]
-        const selectedFile = await toBase64(file) as string;
+    const handleUploadImage = async (e: any) => {
+        const file = e.target.files[0];
+
+        if(file.size > 2097152) {
+            setSizeExceeded(true);
+        }
+
+        const selectedFile = await fileToBase64(file) as string;
         setPostData({...postData, selectedFile})
     }
 
@@ -44,35 +50,44 @@ export const Form = () => {
         e.preventDefault();
 
         if(currentId === null) {
-            dispatch(createPost(postData));
+            await dispatch(createPost(postData));
         } else {
-            dispatch(updatePost({currentId, postData}))
+            await dispatch(updatePost({currentId, postData}))
         }
 
-        clear();
         navigate('/')
     }
 
-    const clear = () => {
+    const clear = (e: SyntheticEvent) => {
+        e.preventDefault()
+
+        if(currentId) {
+            dispatch(setCurrentId(null))
+        }
         setPostData({
             title: '',
             message: '',
-            tags: '',
+            tags: [''],
             selectedFile: '',
         });
+        setSizeExceeded(false);
     }
 
     return (
         <div className="form">
-            <form onSubmit={handleSubmit}>
+            <form
+                autoComplete='off'
+                onSubmit={handleSubmit}
+            >
                 <div className="labels">
-                    <h1>Adding Photo</h1>
+                    <h1>{currentId ? 'update post' : 'add new post'}</h1>
                     <p>
                         <label>
-                            Title: <br/>
                             <input
                                 type="text"
                                 name="title"
+                                placeholder="Title"
+                                required
                                 maxLength={50}
                                 value={postData.title}
                                 onChange={e => setPostData({...postData, title: e.target.value})}
@@ -81,12 +96,10 @@ export const Form = () => {
                     </p>
                     <p>
                         <label>
-                            Message: <br/>
                             <textarea
-                                cols={50}
-                                rows={20}
                                 name="message"
-                                maxLength={50}
+                                placeholder='Messsage'
+                                maxLength={500}
                                 value={postData.message}
                                 onChange={e => setPostData({...postData, message: e.target.value})}
                             />
@@ -94,30 +107,44 @@ export const Form = () => {
                     </p>
                     <p>
                         <label>
-                            Tags: <br/>
                             <input
                                 type="text"
                                 name="tags"
+                                placeholder='Tags'
                                 maxLength={50}
                                 value={postData.tags}
-                                onChange={e => setPostData({...postData, tags: e.target.value})}
+                                onChange={e => setPostData({...postData, tags: e.target.value.split(',')})}
                             />
                         </label>
                     </p>
                     <p>
-                        <label>
-                            Select File: <br/>
+                        <label className='fileUpload'>
                             <input
                                 type="file"
                                 name="file"
-                                onChange={handleImagetoBase64}
+                                required={!currentId && true}
+                                onChange={handleUploadImage}
                             />
+                            <AiOutlineUpload size={32}/>
+                            add photo
+                            <label style={{fontSize: 10}}>
+                                {sizeExceeded ? 'Maximum file size is 2mb. Please change file size.' : ''}
+                            </label>
                         </label>
                     </p>
                 </div>
                 <div className="buttons">
-                    <button type="submit">Send</button>
-                    <button onClick={clear}>Clear</button>
+                    <label>
+                        <button
+                            type="submit"
+                            disabled={sizeExceeded}
+                        />
+                        send
+                    </label>
+                    <label>
+                        <button onClick={clear}/>
+                        clear
+                    </label>
                 </div>
             </form>
         </div>

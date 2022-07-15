@@ -17,13 +17,23 @@ export const updatePost = createAsyncThunk('posts/updatePost', async (args: any)
     const {currentId: id, postData: post} = args;
     const {data} = await api.updatePost(id, post)
 
-    console.log(post, id)
-
     return data
 })
 
 export const deletePost = createAsyncThunk('posts/deletePost', async (id: string) => {
     const {data} = await api.deletePost(id);
+
+    return data
+})
+
+export const likePost = createAsyncThunk('posts/likePost', async (id: string) => {
+    const {data} = await api.likePost(id);
+
+    return data
+});
+
+export const searchFortags = createAsyncThunk('posts/searchForTags', async (tag: string) => {
+    const {data} = await api.searchForTag(tag);
 
     return data
 })

@@ -1,29 +1,64 @@
-.app-bar {
-    margin-top: 15px;
+.bar {
+    position: fixed;
+    background-color: #fdfdfe;
+    width: 100vw;
+    height: 50px;
+    top: 0;
+    border-bottom: 1px solid #dadada;
     display: flex;
     flex-direction: row;
-    background-image: linear-gradient(100deg, rgba(152, 98, 98, 0.89), rgba(31, 31, 114, 0.75));
-    box-shadow: 1px 1px;
-    border-radius: 25px;
-    padding: 15px 50px;
+    justify-content: center;
+}
+
+.app-bar {
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
     align-items: center;
     justify-content: space-between;
-    opacity: initial;
-    width: 90%;
 }
 
 .text {
-    color: black;
+    font-family: 'Grand Hotel', cursive;
+    color: #262626;
     text-decoration: none;
-    font-size: 40px;
+    font-size: 32px;
 }
 
 :hover.text {
-    color: white;
-    transition: ease 0.4s;
+    color: #706f6f;
 }
 
-.icon {
-    position: relative;
-    top: 5px
+.search {
+    display: flex;
+    flex-direction: row;
+}
+
+.searchBar {
+    height: 32px;
+    background-color: #eeeeee;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 0 16px;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+.searchBtn {
+    display: flex;
+    align-items: center;
+    margin-left: 16px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.searchBtn:hover {
+    color: #706f6f;
+}
+
+.addForm {
+    display: flex;
+    align-items: center;
 }

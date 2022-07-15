@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Form } from './components/Form/Form';
 import { NavBar } from './components/NavBar/NavBar';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
@@ -12,10 +12,15 @@ export const App = () => {
         <BrowserRouter>
             <div className='container'>
                 <NavBar/>
-                <Routes>
-                    <Route path="/" element={<Posts/>}/>
-                    <Route path="/form" element={<Form/>}/>
-                </Routes>
+                <div className='content'>
+                    <Routes>
+                        <Route path="/" element={<Posts/>}/>
+                        <Route path="/form" element={<Form/>}/>
+                    </Routes>
+                </div>
+                <footer>
+                    <div>{`©${new Date().getFullYear()} Shutter`}</div>
+                </footer>
             </div>
         </BrowserRouter>
     );

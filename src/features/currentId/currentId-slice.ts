@@ -9,7 +9,6 @@ export const currentId = createSlice({
         setCurrentId: (state, action) => {
             state = action.payload
 
-            console.log('id:', state)
             return state
         }
     }
